@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Страница товара{% endblock %}
+
+{% block body %}
+	<h1>Товар c id: {{ product_id }}</h1>
+
+	<a href="{{ path('homepage') }}">на главную</a>
+{% endblock %}
+

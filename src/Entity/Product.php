@@ -39,63 +39,80 @@ class Product
 	 */
 	private $isTop;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     */
+    private $category;
+
 	public function __construct()
-	{
-		$this->name = '';
-		$this->price = 0;
-		$this->isTop = false;
-	}
+         	{
+         		$this->name = '';
+         		$this->price = 0;
+         		$this->isTop = false;
+         	}
 
 	public function getId(): ?int
-	{
-		return $this->id;
-	}
+         	{
+         		return $this->id;
+         	}
 
 	public function getName(): ?string
-	{
-		return $this->name;
-	}
+         	{
+         		return $this->name;
+         	}
 
 	public function setName(string $name): self
-	{
-		$this->name = $name;
-
-		return $this;
-	}
+         	{
+         		$this->name = $name;
+         
+         		return $this;
+         	}
 
 	public function getDescription(): ?string
-	{
-		return $this->description;
-	}
+         	{
+         		return $this->description;
+         	}
 
 	public function setDescription(?string $description): self
-	{
-		$this->description = $description;
-
-		return $this;
-	}
+         	{
+         		$this->description = $description;
+         
+         		return $this;
+         	}
 
 	public function getPrice()
-	{
-		return $this->price;
-	}
+         	{
+         		return $this->price;
+         	}
 
 	public function setPrice($price): self
-	{
-		$this->price = $price;
-
-		return $this;
-	}
+         	{
+         		$this->price = $price;
+         
+         		return $this;
+         	}
 
 	public function getIsTop(): ?bool
-	{
-		return $this->isTop;
-	}
+         	{
+         		return $this->isTop;
+         	}
 
 	public function setIsTop(bool $isTop): self
-	{
-		$this->isTop = $isTop;
+         	{
+         		$this->isTop = $isTop;
+         
+         		return $this;
+         	}
 
-		return $this;
-	}
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
 }

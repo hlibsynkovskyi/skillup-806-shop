@@ -2,4 +2,8 @@
 
 {% block body %}
     <h1>{{ category.name }}</h1>
+
+    <div class="row">
+        {{ include('partials/products_list.html.twig', {'products': category.products}) }}
+    </div>
 {% endblock %}

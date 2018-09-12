@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\FeedbackRequest;
+use App\Form\FeedbackType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,11 +18,7 @@ class FeedbackController extends AbstractController
     {
         $feedbackRequest = new FeedbackRequest();
 
-        $form = $this->createFormBuilder($feedbackRequest)
-            ->add('name')
-            ->add('email')
-            ->add('message')
-            ->getForm();
+        $form = $this->createForm(FeedbackType::class, $feedbackRequest);
 
         $form->handleRequest($request);
 

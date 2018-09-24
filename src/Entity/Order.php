@@ -45,7 +45,8 @@ class Order
     private $amount;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderItem", mappedBy="order", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderItem", mappedBy="order",
+     *     orphanRemoval=true, indexBy="product_id", cascade={"persist"})
      */
     private $items;
 

@@ -7,7 +7,11 @@
                 <p class="card-text">{{ product.description }}</p>
                 <p class="card-text">{{ product.price }} грн.</p>
                 <a href="{{ path('products_show', {'id': product.id}) }}" class="btn btn-info">Подробнее</a>
-                <a href="{{ path('orders_add_to_cart', {'id': product.id, 'quantity': 1}) }}" class="btn btn-primary">В корзину</a>
+
+                <a href="{{ path('orders_add_to_cart', {'id': product.id, 'quantity': 1}) }}"
+                   class="btn btn-primary js-add-to-cart">
+                    <i class="fas fa-cart-plus"></i>
+                </a>
             </div>
         </div>
     </div>

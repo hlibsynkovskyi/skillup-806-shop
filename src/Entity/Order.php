@@ -45,6 +45,8 @@ class Order
     private $amount;
 
     /**
+     * @var OrderItem[]
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderItem", mappedBy="order",
      *     orphanRemoval=true, indexBy="product_id", cascade={"persist"})
      */
@@ -125,6 +127,7 @@ class Order
         if (!$this->items->contains($item)) {
             $this->items[] = $item;
             $item->setOrder($this);
+            $this->calculateAmount();
         }
 
         return $this;
@@ -134,6 +137,8 @@ class Order
     {
         if ($this->items->contains($item)) {
             $this->items->removeElement($item);
+            $this->calculateAmount();
+
             // set the owning side to null (unless already changed)
             if ($item->getOrder() === $this) {
                 $item->setOrder(null);
@@ -142,4 +147,14 @@ class Order
 
         return $this;
     }
+
+    public function calculateAmount()
+    {
+        $this->amount = 0;
+
+        foreach ($this->items as $item) {
+            $this->amount += $item->getCost();
+        }
+    }
+
 }

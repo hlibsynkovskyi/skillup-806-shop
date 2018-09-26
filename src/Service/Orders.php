@@ -65,7 +65,7 @@ class Orders
      * @throws TransactionRequiredException
      * @throws ORMException
      */
-    private function getCartFromSession(): Order
+    public function getCartFromSession(): Order
     {
         $orderId = $this->session->get(self::CART_SESSION_NAME);
 

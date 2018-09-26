@@ -29,7 +29,21 @@ class OrdersController extends AbstractController
     {
         $orders->addToCart($product, $quantity);
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->cartInHeader($orders);
+        }
+
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/orders/cart-in-header", name="orders_cart_in_header")
+     */
+    public function cartInHeader(Orders $orders)
+    {
+        $cart = $orders->getCartFromSession();
+
+        return $this->render('orders/cart_in_header.html.twig', ['cart' => $cart]);
     }
 
 }

@@ -96,3 +96,7 @@
         -webkit-transform: rotate(360deg);
     }
 }
+
+div.card-img-top {
+    height: 253px;
+}

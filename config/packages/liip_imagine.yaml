@@ -38,3 +38,27 @@ liip_imagine:
                     image: ../public/assets/express-shop-logo.png
                     size: 0.3
                     position: bottomright
+
+        product_detail:
+            # set your image quality defaults
+            jpeg_quality:          85
+            png_compression_level: 8
+
+            # setup the filter steps to apply for this transformation
+            filters:
+                # auto rotate the image using EXIF metadata
+                auto_rotate: ~
+
+                # strip the image of all metadata
+                strip: ~
+
+                # scale and square the image to the given dimensions
+                thumbnail:
+                    size:          [500, 500]
+                    mode:          inset
+                    allow_upscale: true
+
+                watermark:
+                    image: ../public/assets/express-shop-logo.png
+                    size: 0.3
+                    position: bottomright

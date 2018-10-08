@@ -63,9 +63,9 @@
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <span class="navbar-text js-cart-in-header">
+                        <a class="nav-link js-cart-in-header" href="{{ path('orders_cart') }}">
                             {{ render(controller('App\\Controller\\OrdersController::cartInHeader')) }}
-                        </span>
+                        </a>
                     </li>
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         <li class="nav-item">

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block body %}
+    <h1>Корзина</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Стоимость</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in cart.items %}
+                <tr>
+                    <td>{{ item.product }}</td>
+                    <td>{{ item.price|localizedcurrency('UAH') }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.cost|localizedcurrency('UAH') }}</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="3">Всего</td>
+                <td>{{ cart.amount|localizedcurrency('UAH') }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+

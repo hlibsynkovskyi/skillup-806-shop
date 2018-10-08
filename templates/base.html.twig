@@ -63,7 +63,8 @@
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link js-cart-in-header" href="{{ path('orders_cart') }}">
+                        <a class="nav-link js-cart-in-header" href="{{ path('orders_cart') }}"
+                           data-url="{{ path('orders_cart_in_header') }}">
                             {{ render(controller('App\\Controller\\OrdersController::cartInHeader')) }}
                         </a>
                     </li>

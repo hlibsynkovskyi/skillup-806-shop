@@ -15,19 +15,24 @@
             </tr>
         </thead>
 
-        <tbody>
+        <tbody id="cart-table">
             {% for item in cart.items %}
-                <tr>
+                <tr data-item-id="{{ item.id }}">
                     <td>{{ item.product }}</td>
                     <td>{{ item.price|localizedcurrency('UAH') }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.cost|localizedcurrency('UAH') }}</td>
+                    <td>
+                        <input type="number" min="1" name="quantity" value="{{ item.quantity }}"
+                               class="js-item-quantity"
+                               data-update-url="{{ path('orders_update_item_quantity', {'id': item.id}) }}"
+                        >
+                    </td>
+                    <td class="js-item-cost">{{ item.cost|localizedcurrency('UAH') }}</td>
                 </tr>
             {% endfor %}
 
             <tr>
                 <td colspan="3">Всего</td>
-                <td>{{ cart.amount|localizedcurrency('UAH') }}</td>
+                <td class="js-order-amount">{{ cart.amount|localizedcurrency('UAH') }}</td>
             </tr>
         </tbody>
     </table>

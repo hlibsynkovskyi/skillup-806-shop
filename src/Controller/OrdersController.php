@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Service\Orders;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -56,6 +59,27 @@ class OrdersController extends AbstractController
     public function cart(Orders $orders)
     {
         return $this->render('orders/cart.html.twig', ['cart' => $orders->getCartFromSession()]);
+    }
+
+    /**
+     * @Route("/cart/update-quantity/{id}", name="orders_update_item_quantity")
+     */
+    public function updateItemQuantity(OrderItem $item, Orders $orders, Request $request)
+    {
+        $quantity = (int)$request->request->get('quantity');
+
+        if ( $quantity < 1 || $quantity > 1000 ) {
+            throw new \InvalidArgumentException();
+        }
+
+        $cart = $orders->updateItemQuantity($item, $quantity);
+
+        return new JsonResponse(
+            $this->renderView('orders/cart.json.twig', ['cart' => $cart]),
+            200,
+            [],
+            true
+        );
     }
 
 }

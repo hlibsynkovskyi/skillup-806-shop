@@ -83,6 +83,22 @@ class Orders
         return $order;
     }
 
+    /**
+     * @param OrderItem $item
+     * @param int $quantity
+     *
+     * @return Order
+     *
+     * @throws
+     */
+    public function updateItemQuantity(OrderItem $item, int $quantity): Order
+    {
+        $item->setQuantity($quantity);
+        $this->em->flush();
+
+        return $item->getOrder();
+    }
+
     private function saveCart(Order $order)
     {
         $this->em->persist($order);

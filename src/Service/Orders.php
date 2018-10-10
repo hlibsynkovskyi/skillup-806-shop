@@ -99,6 +99,16 @@ class Orders
         return $item->getOrder();
     }
 
+    public function removeItem(OrderItem $item): Order
+    {
+        $order = $item->getOrder();
+        $order->removeItem($item);
+        $this->em->remove($item);
+        $this->em->flush();
+
+        return $order;
+    }
+
     private function saveCart(Order $order)
     {
         $this->em->persist($order);

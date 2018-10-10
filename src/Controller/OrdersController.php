@@ -82,4 +82,23 @@ class OrdersController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/cart/remove-item/{id}", name="orders_remove_item")
+     */
+    public function removeItem(OrderItem $item, Orders $orders, Request $request)
+    {
+        $cart = $orders->removeItem($item);
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(
+                $this->renderView('orders/cart.json.twig', ['cart' => $cart]),
+                200,
+                [],
+                true
+            );
+        }
+
+        return $this->redirectToRoute('orders_cart');
+    }
+
 }

@@ -18,15 +18,41 @@ jQuery(function($) {
 
         $me.find('.js-item-quantity').on('input', function() {
             var $input = $(this),
-                data = {};
+                data = {},
+                value = parseInt($input.val()),
+                min = parseInt($input.attr('min')),
+                max = parseInt($input.attr('max'));
 
-            data[$input.attr('name')] = $input.val();
+            if ($input.val() === '') {
+                value = min;
+            } else {
+                if (isNaN(value) || value < min) {
+                    value = min;
+                } else if (value > max) {
+                    value = max;
+                }
+
+                $input.val(value);
+            }
+
+            data[$input.attr('name')] = value;
             $.post($input.data('update-url'), data)
                 .done(updateCart)
                 .fail(function () {
                     alert("Ошибка обновления корзины. Перезагрузите страницу.");
                     //document.location.reload();
                 });
+        });
+
+        $me.find('.js-remove-item').on('click', function(event) {
+            var $a = $(this);
+
+            event.preventDefault();
+
+            if (confirm('Действительно хотите удалить товар из корзины?')) {
+                $a.closest('tr').remove();
+                $.post(this.href).done(updateCart);
+            }
         });
 
         function updateCart(cartData) {

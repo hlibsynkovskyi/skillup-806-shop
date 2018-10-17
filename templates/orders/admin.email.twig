@@ -1,5 +1,48 @@
 {% block subject %}Новый заказ{% endblock %}
 
 {% block body %}
+    <style>
+        p {
+            margin: 0.3em 0;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table td {
+            border: 1px solid black;
+            padding: 0.2em 1em;
+        }
+    </style>
     <h1>Оформлен новый заказ #{{ order.id }}</h1>
+
+    <p>Пользователь: {{ order.user.firstName }} {{ order.user.lastName }}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Стоимость</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for item in order.items %}
+            <tr>
+                <td>{{ item.product }}</td>
+                <td>{{ item.price|localizedcurrency('UAH') }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.cost|localizedcurrency('UAH') }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="3">Всего</td>
+            <td>{{ order.amount|localizedcurrency('UAH') }}</td>
+        </tr>
+        </tbody>
+    </table>
 {% endblock %}

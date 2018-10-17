@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class OrdersController extends AbstractController
 {
@@ -116,6 +117,7 @@ class OrdersController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $orders->checkout($cart);
+            $this->addFlash('success', 'Спасибо за заказ!');
 
             return $this->redirectToRoute('orders_success');
         }
@@ -128,10 +130,57 @@ class OrdersController extends AbstractController
 
     /**
      * @Route("/cart/success", name="orders_success")
+     * @throws
      */
-    public function success()
+    public function success(Orders $orders)
     {
-        return $this->render('orders/success.html.twig');
+        $order = $orders->getCartFromSession($this->getUser());
+
+        if (!$order->getIsPaid()) {
+            $liqpay = new \LiqPay(getenv('LIQPAY_PUBLIC_KEY'), getenv('LIQPAY_PRIVATE_KEY'));
+            $html = $liqpay->cnb_form([
+                'action'         => 'pay',
+                'amount'         => $order->getAmount(),
+                'currency'       => 'UAH',
+                'description'    => 'Покупка в магазине',
+                'order_id'       => $order->getId(),
+                'version'        => '3',
+                'result_url'     => $this->generateUrl('orders_payment_result', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'sandbox'        => 1,
+            ]);
+        } else {
+            $orders->removeCart();
+            $html = '';
+        }
+
+        return $this->render('orders/success.html.twig', [
+            'paymentButton' => $html,
+        ]);
+    }
+
+    /**
+     * @Route("/payment/result", name="orders_payment_result")
+     * @throws
+     */
+    public function paymentResult(Orders $orders)
+    {
+        $order = $orders->getCartFromSession($this->getUser());
+
+        $liqpay = new \LiqPay(getenv('LIQPAY_PUBLIC_KEY'), getenv('LIQPAY_PRIVATE_KEY'));
+        $response = $liqpay->api('request', [
+            'action' => 'status',
+            'version' => '3',
+            'order_id' => $order->getId(),
+        ]);
+
+        if ($response->status == 'success' || $response->status == 'sandbox' || $response->status == 'wait_accept') {
+            $orders->setPaid($order);
+            $this->addFlash('success', 'Заказ успешно оплачен.');
+        } else {
+            $this->addFlash('error', 'Ошибка оплаты. Попробуйте еще раз.');
+        }
+
+        return $this->redirectToRoute('orders_success');
     }
 
 }

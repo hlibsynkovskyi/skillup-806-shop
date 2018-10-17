@@ -129,8 +129,18 @@ class Orders
     {
         $order->setStatus(Order::STATUS_ORDERED);
         $this->em->flush();
-        $this->removeCart();
         $this->mailer->send($this->adminEmail, 'orders/admin.email.twig', ['order' => $order]);
+    }
+
+    public function removeCart()
+    {
+        $this->session->remove(self::CART_SESSION_NAME);
+    }
+
+    public function setPaid(Order $order)
+    {
+        $order->setIsPaid(true);
+        $this->em->flush();
     }
 
     private function saveCart(Order $order)
@@ -138,11 +148,6 @@ class Orders
         $this->em->persist($order);
         $this->em->flush();
         $this->session->set(self::CART_SESSION_NAME, $order->getId());
-    }
-
-    private function removeCart()
-    {
-        $this->session->remove(self::CART_SESSION_NAME);
     }
 
 }

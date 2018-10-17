@@ -3,6 +3,18 @@
 {% block title %}Оформление заказа{% endblock %}
 
 {% block body %}
-    <h1>Спасибо за заказ, мы обязательно с Вами свяжемся.</h1>
-    <p><a href="{{ path('homepage') }}" class="btn btn-primary">Продолжить покупки</a></p>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">{{ message }}</div>
+    {% endfor %}
+
+    {{ paymentButton|raw }}
+
+    <p>
+        <a href="{{ path('homepage') }}" class="btn btn-primary">Продолжить покупки</a>
+    </p>
+
 {% endblock %}

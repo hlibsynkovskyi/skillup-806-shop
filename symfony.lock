@@ -113,6 +113,9 @@
             "ref": "523b4b0cfb88dc8637cb56e427e6be7718bdce32"
         }
     },
+    "liqpay/liqpay": {
+        "version": "v1.2.3"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },

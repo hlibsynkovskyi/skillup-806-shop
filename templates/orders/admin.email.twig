@@ -15,9 +15,13 @@
             padding: 0.2em 1em;
         }
     </style>
+
     <h1>Оформлен новый заказ #{{ order.id }}</h1>
 
-    <p>Пользователь: {{ order.user.firstName }} {{ order.user.lastName }}</p>
+    <p>Пользователь: {{ order.firstName }} {{ order.lastName }}</p>
+    <p>E-mail: {{ order.email }}</p>
+    <p>Телефон: {{ order.phone }}</p>
+    <p>Адрес: {{ order.address }}</p>
 
     <table>
         <thead>

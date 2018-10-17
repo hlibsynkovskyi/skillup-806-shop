@@ -7,45 +7,47 @@
 
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Товар</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Стоимость</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>Товар</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Стоимость</th>
+            <th></th>
+        </tr>
         </thead>
 
         <tbody id="cart-table">
-            {% for item in cart.items %}
-                <tr data-item-id="{{ item.id }}">
-                    <td>{{ item.product }}</td>
-                    <td>{{ item.price|localizedcurrency('UAH') }}</td>
-                    <td>
-                        <input type="number" min="1" max="1000" pattern="^\d*$"
-                               name="quantity" value="{{ item.quantity }}"
-                               class="js-item-quantity"
-                               data-update-url="{{ path('orders_update_item_quantity', {'id': item.id}) }}"
-                        >
-                    </td>
-                    <td class="js-item-cost">{{ item.cost|localizedcurrency('UAH') }}</td>
-                    <td>
-                        <a class="js-remove-item"
-                           href="{{ path('orders_remove_item', {'id': item.id}) }}"
-                           title="Удалить из корзины"
-                        >
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-
-            <tr>
-                <td colspan="3">Всего</td>
-                <td class="js-order-amount">{{ cart.amount|localizedcurrency('UAH') }}</td>
-                <td></td>
+        {% for item in cart.items %}
+            <tr data-item-id="{{ item.id }}">
+                <td>{{ item.product }}</td>
+                <td>{{ item.price|localizedcurrency('UAH') }}</td>
+                <td>
+                    <input type="number" min="1" max="1000" pattern="^\d*$"
+                           name="quantity" value="{{ item.quantity }}"
+                           class="js-item-quantity"
+                           data-update-url="{{ path('orders_update_item_quantity', {'id': item.id}) }}"
+                    >
+                </td>
+                <td class="js-item-cost">{{ item.cost|localizedcurrency('UAH') }}</td>
+                <td>
+                    <a class="js-remove-item"
+                       href="{{ path('orders_remove_item', {'id': item.id}) }}"
+                       title="Удалить из корзины"
+                    >
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
             </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="3">Всего</td>
+            <td class="js-order-amount">{{ cart.amount|localizedcurrency('UAH') }}</td>
+            <td></td>
+        </tr>
         </tbody>
     </table>
+
+    <a href="{{ path('orders_checkout') }}" class="btn btn-primary">Оформить заказ</a>
 {% endblock %}
 

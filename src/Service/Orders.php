@@ -5,12 +5,14 @@ namespace App\Service;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\TransactionRequiredException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Orders
@@ -27,23 +29,36 @@ class Orders
      */
     private $session;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session)
-    {
+    /**
+     * @var string
+     */
+    private $adminEmail;
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SessionInterface $session,
+        ParameterBagInterface $parameterBag,
+        Mailer $mailer
+    ) {
         $this->em = $entityManager;
         $this->session = $session;
+        $this->adminEmail = $parameterBag->get('admin_email');
+        $this->mailer = $mailer;
     }
 
     /**
-     * @param Product $product
-     * @param int $quantity
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
      */
-    public function addToCart(Product $product, $quantity = 1)
+    public function addToCart(Product $product, ?User $user, $quantity = 1)
     {
-        $order = $this->getCartFromSession();
+        $order = $this->getCartFromSession($user);
         $items = $order->getItems();
 
         if (isset($items[$product->getId()])) {
@@ -65,7 +80,7 @@ class Orders
      * @throws TransactionRequiredException
      * @throws ORMException
      */
-    public function getCartFromSession(): Order
+    public function getCartFromSession(?User $user): Order
     {
         $orderId = $this->session->get(self::CART_SESSION_NAME);
 
@@ -78,6 +93,7 @@ class Orders
 
         if (!$order) {
             $order = new Order();
+            $order->setUser($user);
         }
 
         return $order;
@@ -109,11 +125,24 @@ class Orders
         return $order;
     }
 
+    public function checkout(Order $order)
+    {
+        $order->setStatus(Order::STATUS_ORDERED);
+        $this->em->flush();
+        $this->removeCart();
+        $this->mailer->send($this->adminEmail, 'orders/admin.email.twig', ['order' => $order]);
+    }
+
     private function saveCart(Order $order)
     {
         $this->em->persist($order);
         $this->em->flush();
         $this->session->set(self::CART_SESSION_NAME, $order->getId());
+    }
+
+    private function removeCart()
+    {
+        $this->session->remove(self::CART_SESSION_NAME);
     }
 
 }

@@ -1,0 +1,4 @@
+knp_menu:
+  default_renderer: twig
+  twig:
+      template: partials/menu.html.twig

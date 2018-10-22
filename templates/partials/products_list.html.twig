@@ -9,9 +9,9 @@
                 {% endif %}
             </div>
 
-            <div class="card-body">
+            <div class="card-body product-card">
                 <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.shortDescription }}</p>
+                <p class="card-text product-description">{{ product.shortDescription }}</p>
                 <p class="card-text">{{ product.price }} грн.</p>
                 <a href="{{ path('products_show', {'id': product.id}) }}" class="btn btn-info">Подробнее</a>
 

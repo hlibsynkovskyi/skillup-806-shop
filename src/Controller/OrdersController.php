@@ -60,8 +60,14 @@ class OrdersController extends AbstractController
      */
     public function cart(Orders $orders)
     {
+        $cart = $orders->getCartFromSession($this->getUser());
+
+        if ( $cart->getAmount() == 0 ) {
+            return $this->render('orders/empty_cart.html.twig');
+        }
+
         return $this->render('orders/cart.html.twig', [
-            'cart' => $orders->getCartFromSession($this->getUser())
+            'cart' => $cart
         ]);
     }
 
@@ -112,6 +118,11 @@ class OrdersController extends AbstractController
     public function checkout(Orders $orders, Request $request)
     {
         $cart = $orders->getCartFromSession($this->getUser());
+
+        if ($cart->getAmount() == 0) {
+            return $this->redirectToRoute('orders_cart');
+        }
+
         $form = $this->createForm(MakeOrderType::class, $cart);
         $form->handleRequest($request);
 

@@ -56,6 +56,12 @@ jQuery(function($) {
         });
 
         function updateCart(cartData) {
+            if (cartData.isEmpty) {
+                location.reload();
+
+                return;
+            }
+
             updateCartInHeader();
             $me.find('.js-order-amount').html(cartData.amount);
 
